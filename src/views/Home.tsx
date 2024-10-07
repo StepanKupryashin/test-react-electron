@@ -2,8 +2,12 @@ import { Link } from 'react-router-dom';
 import logo from '../logo.svg';
 import '../App.css';
 
-
 const Home: React.FC = () => {
+
+  const onClick = () => {
+    // console.log(import.meta.dirname);
+     console.log((window as any).ipcRender.send('runScript'));
+  }
     return (
         <div className="App">
         <header className="App-header">
@@ -20,6 +24,8 @@ const Home: React.FC = () => {
           >
             Learn React
           </a>
+        <button onClick={onClick}>Click me</button>
+
         </header>
       </div>
     )

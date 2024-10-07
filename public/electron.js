@@ -1,8 +1,10 @@
+const { exec } = require("child_process");
 const electron = require("electron");
 const {app, BrowserWindow} = electron;
 const path = require("path");
 // const isDev = require("electron-is-dev");
-const isDev = true;
+const electronIpcMain = require('electron').ipcMain;
+const isDev = false;
 let mainWindow;
 
 function createWindow() {
@@ -11,6 +13,7 @@ function createWindow() {
         width: 900,
         height: 680,
         webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
         },
     });
@@ -21,9 +24,9 @@ function createWindow() {
     );
     mainWindow.on("closed", () => (mainWindow = null));
     // Open the DevTools.
-    if (isDev) {
+    // if (isDev) {
         mainWindow.webContents.openDevTools({mode: 'detach'});
-    }
+    // }
 }
 
 app.on("ready", createWindow);
@@ -41,3 +44,12 @@ app.on("activate", () => {
         createWindow();
     }
 });
+
+electronIpcMain.on('runScript', () => {
+    console.log('Script ran from IPC');
+    // Run a script here
+    exec('pwd', (error, stdout, stderr) => {
+        console.log(stdout);
+        
+    });
+})
